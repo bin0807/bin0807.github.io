@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <style>
+        .td-modal {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+            z-index: 1040;
+            /* background-color: rgba(0, 0, 0, 0.5); */
+            font-size: 14px;
+            display: none;
+        }
+
+        .td-modal-dialog {
+            position: absolute;
+            margin: 0 auto;
+            min-width: 300px;
+            width: auto;
+            left: 50%;
+            top: 0%;
+            transform: translate(-50%, -100%);
+            box-sizing: border-box;
+            transition: all .3s ease-out;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+        }
+
+        .td-modal.in .td-modal-dialog {
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .td-modal-content {
+            position: relative;
+            background-color: #ffffff;
+            box-sizing: border-box;
+            outline: 0;
+        }
+
+        .td-modal-header {
+            position: relative;
+            font-size: 14px;
+            color: #003366;
+            text-align: left;
+            text-indent: 20px;
+            height: 40px;
+            line-height: 40px;
+            padding-right: 10px;
+            background-size: auto 100%;
+            font-weight: bold;
+        }
+
+        .td-modal-header .td-modal-close {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        .td-modal-body {
+            position: relative;
+            padding: 15px;
+        }
+
+        .td-modal-footer {
+            padding: 8px;
+            text-align: right;
+            border-top: 1px solid #e5e5e5;
+            text-align: center;
+        }
+
+        .td-modal-footer input {
+            font-size: 14px;
+            color: #003366;
+            background-color: #FFFFFF;
+            text-align: center;
+            vertical-align: bottom;
+            border: none;
+            height: 28px;
+            line-height: 1;
+            width: 60px;
+            cursor: pointer;
+            background-size: 100% 100%;
+            /* outline: none; */
+        }
+
+        .my-row::before,
+        .my-row::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        .input {
+            line-height: 30px;
+            border: 1px solid black;
+            height: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="open">打开</button>
+    <div class="input" id="input"></div>
+    <div class="td-modal" id="demo">
+        <div class="td-modal-dialog">
+            <div class="td-modal-content">
+                <div class="td-modal-header">
+                    <img src="./closeAll.gif" class="td-modal-close">
+                </div>
+                <div class="td-modal-body" style="width: 464px;">
+
+                </div>
+                <div class="td-modal-footer" style="display: none;">
+ 
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        ; (function (global) {
+            function MyDialog(id, backdrop) {
+                this.ele = document.getElementById(id);
+                this.backdrop = backdrop || true;
+                this.preClass = this.ele.getAttribute("class");
+                this.closeEle = this.ele.querySelector('.td-modal-close');
+                this.dialog = this.ele.querySelector('.td-modal-dialog')
+                this.closeEle.addEventListener('click', function () {
+                    this.close();
+                }.bind(this));
+                var self = this;
+                this.ele.addEventListener("click", function (e) {
+                    self.backdrop && e.target === this && self.close()
+                })
+            }
+            MyDialog.prototype.open = function () {
+                this.ele.style.display = 'block';
+                setTimeout(function () {
+                    this.preClass = this.preClass + ' ' + 'in'
+                    this.ele.className = this.preClass;
+                }.bind(this), 0)
+            };
+            MyDialog.prototype.close = function () {
+                this.ele.style.display = 'none';
+                var classList = this.preClass.split(" ")
+                classList.indexOf("in") > -1 && classList.splice(classList.indexOf("in"), 1);
+                var classStr = classList.join(" ");
+                this.preClass = classStr;
+                this.ele.className = this.preClass;
+            }
+            global.MyDialog = MyDialog;
+        })(window)
+        var demo = new MyDialog('demo');
+        document.getElementById("open").addEventListener('click', function () {
+            demo.open();
+        });
+    </script>
+</body>
+
+</html>
